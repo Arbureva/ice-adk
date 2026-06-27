@@ -1,44 +1,36 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/Arbureva/ice-adk/pkg/adapter"
 	"github.com/Arbureva/ice-adk/pkg/chat"
+
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/anthropic"
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/deepseek"
 	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"
-	"github.com/Arbureva/ice-adk/pkg/openai"
 )
 
 func main() {
 	cli := chat.New()
 
-	err := cli.Use(adapter.OpenAI, openai.Config{
-		APIKey:  "test",
-		BaseURL: "http://studio:11434/v1",
-	})
+	ch, err := AnthropicChatStream(cli)
+	//ch, err := OpenAiChatStream(cli)
+	//ch, err := DeepseekChatStream(cli)
 	if err != nil {
 		panic(err)
 	}
 
-	ch, err := cli.ChatStream(context.Background(), adapter.Request{
-		Provider: adapter.OpenAI,
-		Data: &openai.Request{
-			Model: "gpt-oss:20b",
-			Messages: []openai.Message{
-				openai.UserMessage("写一篇1000字的文章"),
-			},
-			Stream: true,
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
-
+	// The consume loop is provider-agnostic: the Kind discriminates the chunk
+	// and the Must* helpers assert the matching payload type. ChunkThinking is
+	// handled too, since reasoning models (DeepSeek V4, Anthropic thinking)
+	// stream chain-of-thought ahead of the answer.
 	for c := range ch {
 		switch c.Kind {
 		case chat.ChunkText:
-			fmt.Printf(chat.MustText(&c))
+			fmt.Print(chat.MustText(&c))
+
+		case chat.ChunkThinking:
+			fmt.Print(chat.MustThinking(&c))
 
 		case chat.ChunkToolCall:
 			f := chat.MustToolCall(&c)
