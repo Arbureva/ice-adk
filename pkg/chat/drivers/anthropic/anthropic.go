@@ -14,6 +14,7 @@ import (
 	sdk "IceADK/pkg/anthropic"
 	"IceADK/pkg/chat"
 	"IceADK/pkg/ecode"
+	"IceADK/pkg/tool"
 )
 
 func init() {
@@ -60,9 +61,34 @@ func nativeRequest(req any) (*sdk.Request, error) {
 	}
 }
 
-func (c *conn) Chat(ctx context.Context, req any) (*adapter.MessageAdapter, error) {
-	nr, err := nativeRequest(req)
+// applyTools renders adapter.Request.Tools into Anthropic's native custom-tool
+// list (appended; natively-set tools are preserved). A nil/empty list is a
+// no-op.
+func applyTools(nr *sdk.Request, raw []interface{}) error {
+	defs, ok := tool.DefinitionsOf(raw)
+	if !ok {
+		return ecode.TypeMismatch
+	}
+	for _, d := range defs {
+		schema := d.Schema
+		if len(schema) == 0 {
+			schema = json.RawMessage(`{"type":"object","properties":{}}`)
+		}
+		nr.Tools = append(nr.Tools, sdk.Tool{
+			Name:        d.Name,
+			Description: d.Description,
+			InputSchema: schema,
+		})
+	}
+	return nil
+}
+
+func (c *conn) Chat(ctx context.Context, req adapter.Request) (*adapter.MessageAdapter, error) {
+	nr, err := nativeRequest(req.Data)
 	if err != nil {
+		return nil, err
+	}
+	if err := applyTools(nr, req.Tools); err != nil {
 		return nil, err
 	}
 	resp, err := c.client.Chat(ctx, nr)
@@ -93,9 +119,12 @@ func (c *conn) Chat(ctx context.Context, req any) (*adapter.MessageAdapter, erro
 	}, nil
 }
 
-func (c *conn) Stream(ctx context.Context, req any, emit func(adapter.ChunkMessageAdapter) bool) error {
-	nr, err := nativeRequest(req)
+func (c *conn) Stream(ctx context.Context, req adapter.Request, emit func(adapter.ChunkMessageAdapter) bool) error {
+	nr, err := nativeRequest(req.Data)
 	if err != nil {
+		return err
+	}
+	if err := applyTools(nr, req.Tools); err != nil {
 		return err
 	}
 

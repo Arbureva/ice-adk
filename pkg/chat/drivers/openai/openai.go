@@ -14,6 +14,7 @@ import (
 	"IceADK/pkg/chat"
 	"IceADK/pkg/ecode"
 	sdk "IceADK/pkg/openai"
+	"IceADK/pkg/tool"
 )
 
 func init() {
@@ -60,9 +61,33 @@ func nativeRequest(req any) (*sdk.Request, error) {
 	}
 }
 
-func (c *conn) Chat(ctx context.Context, req any) (*adapter.MessageAdapter, error) {
-	nr, err := nativeRequest(req)
+// applyTools renders the provider-agnostic tools carried on adapter.Request.Tools
+// into the native request's function-tool list (appended, so natively-set tools
+// are preserved). A nil/empty list is a no-op.
+func applyTools(nr *sdk.Request, raw []interface{}) error {
+	defs, ok := tool.DefinitionsOf(raw)
+	if !ok {
+		return ecode.TypeMismatch
+	}
+	for _, d := range defs {
+		nr.Tools = append(nr.Tools, sdk.Tool{
+			Type: "function",
+			Function: sdk.Function{
+				Name:        d.Name,
+				Description: d.Description,
+				Parameters:  d.Schema,
+			},
+		})
+	}
+	return nil
+}
+
+func (c *conn) Chat(ctx context.Context, req adapter.Request) (*adapter.MessageAdapter, error) {
+	nr, err := nativeRequest(req.Data)
 	if err != nil {
+		return nil, err
+	}
+	if err := applyTools(nr, req.Tools); err != nil {
 		return nil, err
 	}
 	resp, err := c.client.Chat(ctx, nr)
@@ -92,9 +117,12 @@ func (c *conn) Chat(ctx context.Context, req any) (*adapter.MessageAdapter, erro
 	}, nil
 }
 
-func (c *conn) Stream(ctx context.Context, req any, emit func(adapter.ChunkMessageAdapter) bool) error {
-	nr, err := nativeRequest(req)
+func (c *conn) Stream(ctx context.Context, req adapter.Request, emit func(adapter.ChunkMessageAdapter) bool) error {
+	nr, err := nativeRequest(req.Data)
 	if err != nil {
+		return err
+	}
+	if err := applyTools(nr, req.Tools); err != nil {
 		return err
 	}
 	if nr.StreamOptions == nil {

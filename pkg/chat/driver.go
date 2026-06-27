@@ -10,20 +10,23 @@ import (
 )
 
 // Conn is a live, configured connection to one provider. Drivers return it from
-// Open; the chat Client holds one Conn per configured provider. nativeReq is
-// the value carried in adapter.Request.Data (e.g. *openai.Request) — the driver
-// type-asserts it and returns ecode.TypeMismatch on a mismatch.
+// Open; the chat Client holds one Conn per configured provider.
+//
+// The driver reads req.Data for the provider-native request value (e.g.
+// *openai.Request) — type-asserting it and returning ecode.TypeMismatch on a
+// mismatch — and req.Tools for any provider-agnostic tool.Tool/tool.Definition
+// to render into the native request before sending.
 type Conn interface {
 	// Chat performs a non-streaming completion and returns the assistant reply
 	// as an adapter.MessageAdapter whose Data is a *Completion.
-	Chat(ctx context.Context, nativeReq any) (*adapter.MessageAdapter, error)
+	Chat(ctx context.Context, req adapter.Request) (*adapter.MessageAdapter, error)
 
 	// Stream performs a streaming completion, calling emit for each normalized
 	// chunk. emit returns false when the consumer has gone away (context
 	// cancelled); the driver must then stop and return. Stream blocks until the
 	// provider stream ends and returns the terminal error (nil on clean end).
 	// It must NOT emit a ChunkError itself — the Client does that.
-	Stream(ctx context.Context, nativeReq any, emit func(adapter.ChunkMessageAdapter) bool) error
+	Stream(ctx context.Context, req adapter.Request, emit func(adapter.ChunkMessageAdapter) bool) error
 }
 
 // Driver is the registration surface each provider bridge implements. Open

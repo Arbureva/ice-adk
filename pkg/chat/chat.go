@@ -67,7 +67,7 @@ func (c *Client) Chat(ctx context.Context, req adapter.Request) (*adapter.Messag
 	if err != nil {
 		return nil, err
 	}
-	return conn.Chat(ctx, req.Data)
+	return conn.Chat(ctx, req)
 }
 
 // ChatStream runs a streaming completion. req.Data must be the provider's
@@ -94,7 +94,7 @@ func (c *Client) ChatStream(ctx context.Context, req adapter.Request) (<-chan ad
 				return false
 			}
 		}
-		if err := conn.Stream(ctx, req.Data, emit); err != nil {
+		if err := conn.Stream(ctx, req, emit); err != nil {
 			emit(adapter.ChunkMessageAdapter{Kind: ChunkError, Data: err})
 		}
 	}()
