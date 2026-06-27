@@ -15,10 +15,10 @@
 // imports. The chat package itself imports no provider package.
 //
 //	import (
-//		"IceADK/pkg/chat"
-//		"IceADK/pkg/openai"
-//		_ "IceADK/pkg/chat/drivers/openai"   // registers the openai driver
-//		_ "IceADK/pkg/chat/drivers/deepseek" // registers the deepseek driver
+//		"github.com/Arbureva/ice-adk/pkg/chat"
+//		"github.com/Arbureva/ice-adk/pkg/openai"
+//		_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"   // registers the openai driver
+//		_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/deepseek" // registers the deepseek driver
 //	)
 //
 //	cli := chat.New()

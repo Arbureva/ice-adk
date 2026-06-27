@@ -1,7 +1,7 @@
 // Package anthropic registers the Anthropic driver for IceADK's chat layer.
 // Blank-import it to enable provider adapter.Anthropic:
 //
-//	import _ "IceADK/pkg/chat/drivers/anthropic"
+//	import _ "github.com/Arbureva/ice-adk/pkg/chat/drivers/anthropic"
 package anthropic
 
 import (
@@ -10,11 +10,11 @@ import (
 	"errors"
 	"io"
 
-	"IceADK/pkg/adapter"
-	sdk "IceADK/pkg/anthropic"
-	"IceADK/pkg/chat"
-	"IceADK/pkg/ecode"
-	"IceADK/pkg/tool"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
+	sdk "github.com/Arbureva/ice-adk/pkg/anthropic"
+	"github.com/Arbureva/ice-adk/pkg/chat"
+	"github.com/Arbureva/ice-adk/pkg/ecode"
+	"github.com/Arbureva/ice-adk/pkg/tool"
 )
 
 func init() {

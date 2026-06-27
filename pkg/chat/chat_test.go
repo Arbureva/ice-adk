@@ -8,16 +8,16 @@ import (
 	"strings"
 	"testing"
 
-	"IceADK/pkg/adapter"
-	"IceADK/pkg/anthropic"
-	"IceADK/pkg/chat"
-	"IceADK/pkg/deepseek"
-	"IceADK/pkg/openai"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/anthropic"
+	"github.com/Arbureva/ice-adk/pkg/chat"
+	"github.com/Arbureva/ice-adk/pkg/deepseek"
+	"github.com/Arbureva/ice-adk/pkg/openai"
 
 	// register drivers (the only thing business code blank-imports)
-	_ "IceADK/pkg/chat/drivers/anthropic"
-	_ "IceADK/pkg/chat/drivers/deepseek"
-	_ "IceADK/pkg/chat/drivers/openai"
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/anthropic"
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/deepseek"
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"
 )
 
 func sse(w http.ResponseWriter, lines ...string) {

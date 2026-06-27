@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"IceADK/pkg/adapter"
-	"IceADK/pkg/chat"
-	"IceADK/pkg/openai"
-	"IceADK/pkg/tool"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/chat"
+	"github.com/Arbureva/ice-adk/pkg/openai"
+	"github.com/Arbureva/ice-adk/pkg/tool"
 
-	_ "IceADK/pkg/chat/drivers/openai"
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"
 )
 
 // getWeatherArgs is the tool's parameter struct; tool.Reflect turns it into the

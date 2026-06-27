@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"IceADK/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
 )
 
 // Client is the single entry point business code calls. It dispatches an

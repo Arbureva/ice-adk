@@ -1,13 +1,14 @@
 package main
 
 import (
-	"IceADK/pkg/adapter"
-	"IceADK/pkg/chat"
-	"IceADK/pkg/openai"
 	"context"
 	"fmt"
 
-	_ "IceADK/pkg/chat/drivers/openai"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/chat"
+	"github.com/Arbureva/ice-adk/pkg/openai"
+
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"
 )
 
 func main() {

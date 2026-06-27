@@ -1,7 +1,7 @@
 // Package openai registers the OpenAI driver for IceADK's chat layer.
 // Blank-import it to enable provider adapter.OpenAI:
 //
-//	import _ "IceADK/pkg/chat/drivers/openai"
+//	import _ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"
 package openai
 
 import (
@@ -10,11 +10,11 @@ import (
 	"errors"
 	"io"
 
-	"IceADK/pkg/adapter"
-	"IceADK/pkg/chat"
-	"IceADK/pkg/ecode"
-	sdk "IceADK/pkg/openai"
-	"IceADK/pkg/tool"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/chat"
+	"github.com/Arbureva/ice-adk/pkg/ecode"
+	sdk "github.com/Arbureva/ice-adk/pkg/openai"
+	"github.com/Arbureva/ice-adk/pkg/tool"
 )
 
 func init() {

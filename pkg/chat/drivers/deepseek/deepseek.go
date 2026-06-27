@@ -1,7 +1,7 @@
 // Package deepseek registers the DeepSeek driver for IceADK's chat layer.
 // Blank-import it to enable provider adapter.Deepseek:
 //
-//	import _ "IceADK/pkg/chat/drivers/deepseek"
+//	import _ "github.com/Arbureva/ice-adk/pkg/chat/drivers/deepseek"
 package deepseek
 
 import (
@@ -10,11 +10,11 @@ import (
 	"errors"
 	"io"
 
-	"IceADK/pkg/adapter"
-	"IceADK/pkg/chat"
-	sdk "IceADK/pkg/deepseek"
-	"IceADK/pkg/ecode"
-	"IceADK/pkg/tool"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/chat"
+	sdk "github.com/Arbureva/ice-adk/pkg/deepseek"
+	"github.com/Arbureva/ice-adk/pkg/ecode"
+	"github.com/Arbureva/ice-adk/pkg/tool"
 )
 
 func init() {

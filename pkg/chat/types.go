@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"IceADK/pkg/adapter"
+	"github.com/Arbureva/ice-adk/pkg/adapter"
 )
 
 // Normalized stream chunk kinds. Each is carried in the Kind field of an

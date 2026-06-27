@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"IceADK/pkg/tool"
+	"github.com/Arbureva/ice-adk/pkg/tool"
 )
 
 type weatherArgs struct {
