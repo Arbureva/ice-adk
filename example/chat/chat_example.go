@@ -1,36 +1,20 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/Arbureva/ice-adk/pkg/adapter"
 	"github.com/Arbureva/ice-adk/pkg/chat"
-	"github.com/Arbureva/ice-adk/pkg/openai"
-
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/anthropic"
+	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/deepseek"
 	_ "github.com/Arbureva/ice-adk/pkg/chat/drivers/openai"
 )
 
 func main() {
 	cli := chat.New()
 
-	err := cli.Use(adapter.OpenAI, openai.Config{
-		APIKey:  "test",
-		BaseURL: "http://studio:11434/v1",
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	res, err := cli.Chat(context.Background(), adapter.Request{
-		Provider: adapter.OpenAI,
-		Data: &openai.Request{
-			Model: "gpt-oss:20b",
-			Messages: []openai.Message{
-				openai.UserMessage("Introduce yourself in one sentence."),
-			},
-		},
-	})
+	// res, err := OpenAiChat(cli)
+	//res, err := DeepseekChat(cli)
+	res, err := AnthropicChat(cli)
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +25,4 @@ func main() {
 	}
 
 	fmt.Printf("AI: %s\n| Input: %d | Output: %d | Reasoning: %s |\n", msg.Text, msg.Usage.TotalTokens, msg.Usage.OutputTokens, msg.Reasoning)
-
-	//  AI: I am ChatGPT, a large language model trained by OpenAI, here to help you with information, ideas, and solutions.
-	//	| Input: 155 | Output: 82 | Reasoning:  |
 }
